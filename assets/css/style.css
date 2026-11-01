@@ -748,6 +748,7 @@ textarea.input { resize: vertical; }
 /* 21K age floor: locked once the birth year is too late */
 .cat-opt.is-locked, .cat-opt.is-locked input { cursor: not-allowed; }
 .cat-opt.is-locked .choice__body { opacity: .55; border-style: dashed; box-shadow: none; }
+.cat-opt .choice__body .cat-note { color: var(--k5-t); font-weight: 700; }
 .cat-opt .choice__body .cat-lock { display: none; color: var(--alert); font-weight: 700; }
 .cat-opt.is-locked .choice__body .cat-lock { display: block; }
 
