@@ -237,7 +237,8 @@
           if (c.family) sub.push('家長與 12 歲以下孩童');
           if (!c.chip && !c.family) sub.push('不計時・不寄物');
           return '<label class="choice cat-opt"><input type="radio" name="category" id="f-cat-' + c.key + '" value="' + c.key + '">' +
-            '<span class="choice__body"><span class="nm"><b>' + esc(c.name) + '</b><small>' + esc(sub.join('・')) + '</small></span>' +
+            '<span class="choice__body"><span class="nm"><b>' + esc(c.name) + '</b><small>' + esc(sub.join('・')) + '</small>' +
+            (c.maxBirthYear ? '<small class="cat-lock">' + c.maxBirthYear + ' 年以前出生才能報</small>' : '') + '</span>' +
             '<span class="pr">' + money(c.price) + '</span></span></label>';
         }).join('') + '</div></div>';
     }).join('');
@@ -325,6 +326,15 @@
     $('#f-ref-class-other').hidden = val('f-ref-class') !== OTHER;
     $('#f-parent-class-other').hidden = val('f-parent-class') !== OTHER;
     $('#guardianBlock').hidden = !isMinor();
+
+    // 21K 有年齡下限（大會：半馬須滿 16 歲）：選了出生年，太小就把 21K 鎖起來
+    var birthY = parseInt(val('f-birth-y'), 10) || 0;
+    C.categories.forEach(function (c) {
+      var el = c.maxBirthYear && document.getElementById('f-cat-' + c.key);
+      if (!el) return;
+      el.disabled = birthY > c.maxBirthYear;
+      el.closest('.choice').classList.toggle('is-locked', el.disabled);
+    });
 
     var cat = catByKey[radioVal('category')];
     $('#lbl-size').innerHTML = (cat && cat.family ? '親子組紀念衫（石虎款）尺寸' : '紀念衫尺寸') + '<span class="req">*</span>';
@@ -481,7 +491,10 @@
     else {
       var bd = new Date(b.y, b.m - 1, b.d);
       if (bd > new Date()) e.birth = '出生日期不能在未來';
-      else if (cat && cat.maxBirthYear && b.y > cat.maxBirthYear) e.birth = cat.dist + ' 須年滿 16 歲（' + cat.maxBirthYear + ' 年以前出生），請改選其他組別';
+      else if (cat && cat.maxBirthYear && b.y > cat.maxBirthYear) {
+        e.category = cat.dist + ' 須滿 ' + (Number(C.raceDate.slice(0, 4)) - cat.maxBirthYear) + ' 歲（' + cat.maxBirthYear + ' 年以前出生），請改選 10K 或 5K';
+        e.birth = '這個生日不能報 ' + cat.dist + '，請到上面「報名組別」改選 10K 或 5K';
+      }
     }
     if (!v.nationality) e.nationality = '請選擇國籍';
     var isTW = v.nationality === 'TWN-Taiwan';
