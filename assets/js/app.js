@@ -168,7 +168,7 @@
         chips.push('<span class="chip">' + (c.chip ? '晶片計時' : '不計時') + '</span>');
         if (c.chip) chips.push('<span class="chip">' + (c.ranked ? '列入名次' : '不列名次') + '</span>');
         if (c.bag) chips.push('<span class="chip chip--hl">含衣保袋</span>');
-        if (c.family) chips.push('<span class="chip chip--hl">家長＋孩童</span>');
+        if (c.family) chips.push('<span class="chip chip--hl">家長與孩童皆須報名</span>');
         return '<article class="bib">' +
           '<div class="bib__band"><b>' + c.dist + '</b></div>' +
           '<h3 class="bib__name">' + esc(c.name) + '</h3>' +
@@ -238,6 +238,7 @@
           if (!c.chip && !c.family) sub.push('不計時・不寄物');
           return '<label class="choice cat-opt"><input type="radio" name="category" id="f-cat-' + c.key + '" value="' + c.key + '">' +
             '<span class="choice__body"><span class="nm"><b>' + esc(c.name) + '</b><small>' + esc(sub.join('・')) + '</small>' +
+            (c.family ? '<small class="cat-note">家長與孩童皆須報名</small>' : '') +
             (c.maxBirthYear ? '<small class="cat-lock">' + c.maxBirthYear + ' 年以前出生才能報</small>' : '') + '</span>' +
             '<span class="pr">' + money(c.price) + '</span></span></label>';
         }).join('') + '</div></div>';
@@ -774,6 +775,7 @@
       '<dt>匯款後五碼</dt><dd>' + esc(v.last5) + '（' + esc(dayText(v.payDate)) + ' 匯款）</dd>';
     var preview = res.preview ? '<p class="preview-flag">預覽模式：尚未設定收件網址，這筆資料沒有送出。</p>' : '';
     var lineBtn = link ? '<a class="btn btn--sun" href="' + esc(link) + '" target="_blank" rel="noopener">傳給官方 LINE 小編</a>' : '';
+    var family = cat && cat.family;   // 親子組：家長與孩童皆須報名，提醒另一位也要報
 
     area.innerHTML = '<div class="done">' +
       '<span class="done__badge">報名資料已送出</span>' +
@@ -781,6 +783,7 @@
       '<div><p class="done__label">報名編號</p><p class="done__id">' + esc(res.id || '—') + '</p></div>' +
       '<dl>' + rows + '</dl>' +
       '<p>請截圖保存這個畫面，並傳給 ' + esc(lineName) + ' 小編。有問題請洽' + esc(C.contact) + '。</p>' +
+      (family ? '<p class="done__family"><b>親子組家長與孩童皆須報名</b>，另一位還沒報的話，請按「再幫一位報名」。</p>' : '') +
       preview +
       '<div class="done__actions">' + lineBtn + '<button class="btn btn--line" type="button" id="btnAnother">再幫一位報名</button></div>' +
       '</div>';
@@ -796,6 +799,7 @@
       '<ol class="shot__steps">' +
       '<li><span><b>截圖</b>這個畫面（電源鍵＋音量鍵一起按）。</span></li>' +
       '<li><span>把截圖<b>傳給 ' + esc(lineName) + ' 小編</b>' + (link ? '：按下面的按鈕，報名資料會先幫你打好。' : '。') + '</span></li>' +
+      (family ? '<li><span>親子組<b>家長與孩童皆須報名</b>：另一位還沒報的話，按「我截好了」再點「再幫一位報名」。</span></li>' : '') +
       '</ol>' + preview;
     var btn = $('#doneLineBtn');
     btn.hidden = !link;
