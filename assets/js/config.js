@@ -8,12 +8,12 @@ window.NGR_CONFIG = {
 
   /* Google Apps Script 網頁應用程式網址（部署後貼上）。
    * 留空 = 預覽模式：可以完整操作，但資料不會送出。 */
-     endpoint: 'https://script.google.com/macros/s/AKfycbz9rljmw8NtCjlQeHBwZBlnZQaorrqYOL9sebw_J8kcLe40rCPc9YObEwGBAmpAaOdm9w/exec',
+  endpoint: 'https://script.google.com/macros/s/AKfycbz9rljmw8NtCjlQeHBwZBlnZQaorrqYOL9sebw_J8kcLe40rCPc9YObEwGBAmpAaOdm9w/exec',
 
   /* 團報時間（台灣時間）。開放前按鈕會鎖住；截止時間一到自動關閉報名。
    * apps-script/Code.gs 的 OPEN_AT / DEADLINE 要設成一樣。
    * 開放前要測試：網址後面加 #test（例：…/ngr2027/#test），送出的資料會標成【測試】。 */
-  openAt: '2026-11-03T00:00:00+08:00',
+  openAt: '2026-11-01T00:00:00+08:00',   // 暫時開放測試中；測完改回 '2026-11-03T00:00:00+08:00'
   deadline: '2026-11-09T23:59:59+08:00',
 
   /* 團報窗口（顯示在頁面上，讓報名者有問題時知道找誰；前面會自動接「請洽」，這裡只寫對象） */
