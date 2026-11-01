@@ -16,7 +16,8 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="NID RUN CLUB｜2027 國家地理路跑團報">
 <meta property="og:description" content="2027.03.14 凱達格蘭大道起跑｜21K・10K・5K｜NID 學員與親友團報，線上填表＋匯款後五碼即完成報名。">
-<meta property="og:image" content="https://NIDRCComp.github.io/ngr2027/assets/img/og.jpg">
+<meta property="og:url" content="https://nidrccomp.github.io/ngr2027/">
+<meta property="og:image" content="https://nidrccomp.github.io/ngr2027/assets/img/og.jpg">
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 </head>
@@ -650,6 +651,20 @@
       <div class="row">
         <button class="btn btn--line" type="button" data-close>返回修改</button>
         <button class="btn btn--sun" type="button" id="btnConfirm">確認送出</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DONE MODAL：報名完成，請學員截圖並傳給官方 LINE 小編（點外面不會關，避免還沒截圖就關掉） -->
+<div class="modal modal--done" id="doneModal" role="dialog" aria-modal="true" aria-labelledby="doneModalTitle" hidden>
+  <div class="modal__scrim"></div>
+  <div class="modal__box">
+    <div class="modal__body shot" id="doneShot"></div>
+    <div class="modal__foot">
+      <div class="row">
+        <button class="btn btn--line" type="button" data-close>我截好了</button>
+        <a class="btn btn--sun" id="doneLineBtn" target="_blank" rel="noopener" hidden>傳給官方 LINE 小編</a>
       </div>
     </div>
   </div>

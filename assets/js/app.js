@@ -701,31 +701,77 @@
       });
   }
 
+  /* ---------- 報名完成：頁面上的完成區＋跳出視窗（請學員截圖、傳給官方 LINE 小編） */
+  function dayText(iso) {
+    var p = String(iso || '').split('-');
+    return p.length === 3 ? Number(p[1]) + '/' + Number(p[2]) : String(iso || '');
+  }
+  /* 開啟官方帳號聊天室並先打好訊息（LINE URL scheme：line.me/R/oaMessage/{LINE ID}/?{訊息}） */
+  function lineLink(text) {
+    var id = C.line && C.line.id;
+    return id ? 'https://line.me/R/oaMessage/' + encodeURIComponent(id) + '/?' + encodeURIComponent(text) : '';
+  }
+  function lineMessage(v, f, res) {
+    var test = res.preview || /^TEST-/.test(String(res.id || ''));
+    return (test ? '【測試】' : '') + '【2027國家地理路跑 團報】報名完成\n' +
+      '編號：' + (res.id || '—') + '\n' +
+      '姓名：' + v.name + '\n' +
+      '組別：' + v.category + '\n' +
+      '應匯金額：' + money(f.total) + '\n' +
+      '匯款後五碼：' + v.last5 + '（' + dayText(v.payDate) + ' 匯款）\n' +
+      '截圖附上，麻煩小編確認，謝謝！';
+  }
+
   function showDone(v, f, res) {
     var area = $('#doneArea');
     var cat = catByKey[v.categoryKey];
+    var link = lineLink(lineMessage(v, f, res));
+    var lineName = (C.line && C.line.name) || 'NID 官方 LINE';
+    var who = v.member === 'student' ? '當期學員・' + v.className : '非當期學員・朋友 ' + v.refName + '（' + v.refClass + '）';
+    var rows =
+      '<dt>組別</dt><dd>' + esc(v.category) + '</dd>' +
+      '<dt>' + (cat && cat.family ? '親子組紀念衫' : '紀念衫') + '</dt><dd>' + esc(v.size) + '</dd>' +
+      '<dt>應匯金額</dt><dd>' + money(f.total) + '</dd>' +
+      '<dt>匯款後五碼</dt><dd>' + esc(v.last5) + '（' + esc(dayText(v.payDate)) + ' 匯款）</dd>';
+    var preview = res.preview ? '<p class="preview-flag">預覽模式：尚未設定收件網址，這筆資料沒有送出。</p>' : '';
+    var lineBtn = link ? '<a class="btn btn--sun" href="' + esc(link) + '" target="_blank" rel="noopener">傳給官方 LINE 小編</a>' : '';
+
     area.innerHTML = '<div class="done">' +
       '<span class="done__badge">報名資料已送出</span>' +
       '<h3>' + esc(v.name) + '，謝謝你加入 NID 團報！</h3>' +
       '<div><p class="done__label">報名編號</p><p class="done__id">' + esc(res.id || '—') + '</p></div>' +
-      '<dl>' +
-      '<dt>組別</dt><dd>' + esc(v.category) + '</dd>' +
-      '<dt>' + (cat && cat.family ? '親子組紀念衫' : '紀念衫') + '</dt><dd>' + esc(v.size) + '</dd>' +
-      '<dt>應匯金額</dt><dd>' + money(f.total) + '</dd>' +
-      '<dt>匯款後五碼</dt><dd>' + esc(v.last5) + '（' + esc(v.payDate) + '）</dd>' +
-      '</dl>' +
-      '<p>請截圖保存這個畫面。有問題請洽' + esc(C.contact) + '。</p>' +
-      (res.preview ? '<p class="preview-flag">預覽模式：尚未設定收件網址，這筆資料沒有送出。</p>' : '') +
-      '<div class="done__actions"><button class="btn btn--sun" type="button" id="btnAnother">再幫一位報名</button></div>' +
+      '<dl>' + rows + '</dl>' +
+      '<p>請截圖保存這個畫面，並傳給 ' + esc(lineName) + ' 小編。有問題請洽' + esc(C.contact) + '。</p>' +
+      preview +
+      '<div class="done__actions">' + lineBtn + '<button class="btn btn--line" type="button" id="btnAnother">再幫一位報名</button></div>' +
       '</div>';
+
+    // 跳出視窗：一個畫面放得下，方便學員截圖
+    $('#doneShot').innerHTML =
+      '<p class="shot__badge">✓ 報名完成</p>' +
+      '<h2 class="shot__title" id="doneModalTitle">請截圖這個畫面</h2>' +
+      '<div class="shot__card">' +
+      '<p class="shot__label">報名編號</p><p class="shot__id">' + esc(res.id || '—') + '</p>' +
+      '<dl class="shot__list"><dt>姓名</dt><dd>' + esc(v.name) + '</dd>' + rows + '<dt>身分</dt><dd>' + esc(who) + '</dd></dl>' +
+      '</div>' +
+      '<ol class="shot__steps">' +
+      '<li><span><b>截圖</b>這個畫面（電源鍵＋音量鍵一起按）。</span></li>' +
+      '<li><span>把截圖<b>傳給 ' + esc(lineName) + ' 小編</b>' + (link ? '：按下面的按鈕，報名資料會先幫你打好。' : '。') + '</span></li>' +
+      '</ol>' + preview;
+    var btn = $('#doneLineBtn');
+    btn.hidden = !link;
+    if (link) btn.href = link; else btn.removeAttribute('href');
+
     $('#formArea').hidden = true;
     area.hidden = false;
     setTotalBar(false);
-    area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    area.scrollIntoView({ block: 'start' });
     $('#btnAnother').addEventListener('click', resetForAnother);
+    openModal($('#doneModal'), $('#btnAnother'));
   }
 
   function resetForAnother() {
+    if (!$('#doneModal').hidden) closeModal($('#doneModal'));
     $('#signupForm').reset();
     addonQty = { bag: 0, tee: 0, towel: 0 };
     $$('#addonList output').forEach(function (o) { o.textContent = '0'; });
@@ -842,6 +888,7 @@
     });
     wireModal($('#termsModal'), null);
     wireModal($('#reviewModal'), null);
+    wireModal($('#doneModal'), null);
     $('#termsBody').addEventListener('scroll', checkTermsRead, { passive: true });
     window.addEventListener('resize', function () { if (!$('#termsModal').hidden) checkTermsRead(); });
     $('#btnAgree').addEventListener('click', function () {

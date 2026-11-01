@@ -8,7 +8,7 @@ window.NGR_CONFIG = {
 
   /* Google Apps Script 網頁應用程式網址（部署後貼上）。
    * 留空 = 預覽模式：可以完整操作，但資料不會送出。 */
-  endpoint: 'https://script.google.com/macros/s/AKfycbz9rljmw8NtCjlQeHBwZBlnZQaorrqYOL9sebw_J8kcLe40rCPc9YObEwGBAmpAaOdm9w/exec',
+  endpoint: '',
 
   /* 團報時間（台灣時間）。開放前按鈕會鎖住；截止時間一到自動關閉報名。
    * apps-script/Code.gs 的 OPEN_AT / DEADLINE 要設成一樣。
@@ -16,8 +16,12 @@ window.NGR_CONFIG = {
   openAt: '2026-11-03T00:00:00+08:00',
   deadline: '2026-11-09T23:59:59+08:00',
 
-  /* 團報窗口（顯示在頁面上，讓報名者有問題時知道找誰） */
-  contact: '請洽各班教練或 NID 官方 LINE',
+  /* 團報窗口（顯示在頁面上，讓報名者有問題時知道找誰；前面會自動接「請洽」，這裡只寫對象） */
+  contact: '各班教練或 NID 官方 LINE',
+
+  /* NID 官方 LINE：報名完成會跳出視窗，請學員截圖傳給小編。
+   * id = 官方帳號的 LINE ID（@ 開頭，取自 NID 官網）；留空就不顯示 LINE 按鈕。 */
+  line: { id: '@eei8717i', name: 'NID 官方 LINE' },
 
   /* 大會官方頁面 */
   officialUrl: 'https://irunner.biji.co/2027NGR',
