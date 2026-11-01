@@ -8,7 +8,7 @@ window.NGR_CONFIG = {
 
   /* Google Apps Script 網頁應用程式網址（部署後貼上）。
    * 留空 = 預覽模式：可以完整操作，但資料不會送出。 */
-  endpoint: '',
+     endpoint: 'https://script.google.com/macros/s/AKfycbz9rljmw8NtCjlQeHBwZBlnZQaorrqYOL9sebw_J8kcLe40rCPc9YObEwGBAmpAaOdm9w/exec',
 
   /* 團報時間（台灣時間）。開放前按鈕會鎖住；截止時間一到自動關閉報名。
    * apps-script/Code.gs 的 OPEN_AT / DEADLINE 要設成一樣。
