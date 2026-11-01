@@ -60,6 +60,7 @@
   function applyConfigText() {
     var map = {
       shipStudent: money(C.shipping.student),
+      shipChild: money(shipFor('child')),
       shipGuest: money(C.shipping.guest),
       chip: money(C.chipDeposit),
       chipShort: '晶片押金 ' + C.chipDeposit,
@@ -185,7 +186,7 @@
   function renderFeeTable() {
     var showChip = C.chipDeposit > 0;
     var head = '<tr><th scope="col">組別</th><th scope="col" class="col-detail">報名費</th>' + (showChip ? '<th scope="col" class="col-detail">晶片押金</th>' : '') +
-      '<th scope="col">當期學員應匯</th><th scope="col">非當期學員應匯</th></tr>';
+      '<th scope="col">當期學員／小孩應匯</th><th scope="col">非當期學員應匯</th></tr>';
     $('#feeTable thead').innerHTML = head;
     $('#feeTable tbody').innerHTML = C.categories.map(function (c) {
       var chip = c.chip ? C.chipDeposit : 0;
@@ -212,6 +213,7 @@
   function renderFormOptions() {
     fillSelect($('#f-class'), '選擇你的班級', classOptions());
     fillSelect($('#f-ref-class'), '選擇朋友的班級', classOptions());
+    fillSelect($('#f-parent-class'), '選擇爸爸或媽媽的班級', classOptions());
     fillSelect($('#f-size'), '選擇尺寸', optionList(C.sizes));
     $('#f-nat').innerHTML = optionList(COUNTRIES);
     $('#f-nat').value = 'TWN-Taiwan';
@@ -321,6 +323,7 @@
     });
     $('#f-class-other').hidden = val('f-class') !== OTHER;
     $('#f-ref-class-other').hidden = val('f-ref-class') !== OTHER;
+    $('#f-parent-class-other').hidden = val('f-parent-class') !== OTHER;
     $('#guardianBlock').hidden = !isMinor();
 
     var cat = catByKey[radioVal('category')];
@@ -332,6 +335,20 @@
     $('#f-phone').placeholder = isTW ? '0912345678' : '+81 90 1234 5678';
   }
 
+  /* ---------- 報名身分：當期學員／當期學員的小孩／非當期學員 */
+  var MEMBER_LABEL = { student: '當期學員', child: '當期學員的小孩', guest: '非當期學員' };
+  function shipFor(m) {
+    if (m === 'student') return C.shipping.student;
+    if (m === 'child') return C.shipping.child != null ? C.shipping.child : C.shipping.student;
+    if (m === 'guest') return C.shipping.guest;
+    return 0;
+  }
+  function whoText(v, short) {
+    if (v.member === 'student') return '當期學員・' + v.className;
+    if (v.member === 'child') return '當期學員的小孩・家長 ' + v.refName + '（' + v.refClass + '）';
+    return '非當期學員・' + (short ? '朋友 ' : '當期學員朋友 ') + v.refName + '（' + v.refClass + '）';
+  }
+
   /* ---------- fee */
   function calcFee() {
     var cat = catByKey[radioVal('category')];
@@ -339,10 +356,10 @@
     var lines = [];
     var entry = cat ? cat.price : 0;
     var chip = cat && cat.chip ? C.chipDeposit : 0;
-    var ship = member === 'student' ? C.shipping.student : member === 'guest' ? C.shipping.guest : 0;
+    var ship = shipFor(member);
     lines.push(cat ? { k: '報名費・' + cat.label, v: entry } : { k: '報名費（請選組別）', v: null });
     if (cat && C.chipDeposit > 0) lines.push(cat.chip ? { k: '晶片押金（可退）', v: chip } : { k: '晶片押金（5K 免收）', v: 0, muted: true });
-    lines.push(member ? { k: '運費・' + (member === 'student' ? '當期學員' : '非當期學員'), v: ship } : { k: '運費（請選身分）', v: null });
+    lines.push(member ? { k: '運費・' + MEMBER_LABEL[member], v: ship } : { k: '運費（請選身分）', v: null });
     var addons = 0;
     if (C.addons && C.addons.enabled) {
       ['bag', 'tee', 'towel'].forEach(function (k) {
@@ -398,12 +415,14 @@
     var b = birthParts();
     var cls = val('f-class') === OTHER ? val('f-class-other') : val('f-class');
     var ref = val('f-ref-class') === OTHER ? val('f-ref-class-other') : val('f-ref-class');
+    var par = val('f-parent-class') === OTHER ? val('f-parent-class-other') : val('f-parent-class');
     var cat = catByKey[radioVal('category')];
+    var mem = radioVal('member');
     return {
-      member: radioVal('member'),
-      className: radioVal('member') === 'student' ? cls : '',
-      refName: radioVal('member') === 'guest' ? val('f-ref-name') : '',
-      refClass: radioVal('member') === 'guest' ? ref : '',
+      member: mem,
+      className: mem === 'student' ? cls : '',
+      refName: mem === 'guest' ? val('f-ref-name') : mem === 'child' ? val('f-parent-name') : '',
+      refClass: mem === 'guest' ? ref : mem === 'child' ? par : '',
       categoryKey: cat ? cat.key : '',
       category: cat ? cat.label : '',
       size: val('f-size'),
@@ -443,6 +462,13 @@
       if (!v.refName) e.refName = '請填寫你的當期學員朋友姓名';
       else if (v.refName === v.name) e.refName = '請填另一位當期學員朋友，不能填自己';
       if (!v.refClass) e.refClass = val('f-ref-class') === OTHER ? '請填寫朋友的班級名稱' : '請選擇朋友的班級';
+    }
+    if (v.member === 'child') {
+      if (!v.refName) e.parentName = '請填寫爸爸或媽媽的姓名';
+      else if (v.refName === v.name) e.parentName = '請填爸爸或媽媽的姓名，不是小朋友自己的';
+      if (!v.refClass) e.parentClass = val('f-parent-class') === OTHER ? '請填寫爸爸或媽媽的班級名稱' : '請選擇爸爸或媽媽的班級';
+      var cb = birthParts();
+      if (cb && ageOnRaceDay(cb) >= 18) e.member = '「當期學員的小孩」限比賽當天未滿 18 歲；已成年請改選「非當期學員」';
     }
     var cat = catByKey[v.categoryKey];
     if (!cat) e.category = '請選擇報名組別';
@@ -590,7 +616,7 @@
   function reviewHTML(v, f) {
     var cat = catByKey[v.categoryKey];
     var rows = [];
-    rows.push(['身分', v.member === 'student' ? '當期學員・' + v.className : '非當期學員・當期學員朋友 ' + v.refName + '（' + v.refClass + '）']);
+    rows.push(['身分', whoText(v)]);
     rows.push(['組別', v.category]);
     rows.push([cat && cat.family ? '親子組紀念衫' : '紀念衫尺寸', v.size]);
     rows.push(['姓名', v.name + '・' + v.gender]);
@@ -638,7 +664,7 @@
 
   function payload(v, f) {
     var data = JSON.parse(JSON.stringify(v));
-    data.memberLabel = v.member === 'student' ? '當期學員' : '非當期學員';
+    data.memberLabel = MEMBER_LABEL[v.member] || '';
     data.fee = { entry: f.entry, chip: f.chip, shipping: f.ship, addons: f.addons, total: f.total };
     data.agreedAt = state.agreedAt;
     data.submittedAt = new Date().toISOString();
@@ -727,7 +753,7 @@
     var cat = catByKey[v.categoryKey];
     var link = lineLink(lineMessage(v, f, res));
     var lineName = (C.line && C.line.name) || 'NID 官方 LINE';
-    var who = v.member === 'student' ? '當期學員・' + v.className : '非當期學員・朋友 ' + v.refName + '（' + v.refClass + '）';
+    var who = whoText(v, true);
     var rows =
       '<dt>組別</dt><dd>' + esc(v.category) + '</dd>' +
       '<dt>' + (cat && cat.family ? '親子組紀念衫' : '紀念衫') + '</dt><dd>' + esc(v.size) + '</dd>' +

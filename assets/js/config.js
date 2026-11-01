@@ -27,8 +27,9 @@ window.NGR_CONFIG = {
   officialUrl: 'https://irunner.biji.co/2027NGR',
   officialRulesUrl: 'https://irunner.biji.co/2027NGR?page=5606',
 
-  /* 運費（NID 團報規則）：當期學員 50、非當期學員 80 */
-  shipping: { student: 50, guest: 80 },
+  /* 運費（NID 團報規則）：當期學員 50、當期學員的小孩 50（比賽當天未滿 18 歲，爸爸或媽媽是當期學員）、非當期學員 80
+   * apps-script/Code.gs 的 SHIPPING 要設成一樣。 */
+  shipping: { student: 50, child: 50, guest: 80 },
 
   /* 晶片押金：大會規定 21K、10K 每人另加 100 元，賽後歸還晶片即退還。
    * 若團報不向學員收，改成 0。 */

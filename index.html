@@ -94,7 +94,7 @@
       <div class="band__head">
         <p class="band__kicker">Categories & Fees</p>
         <h2 class="band__title">組別與費用</h2>
-        <p class="band__lead">報名費依大會公告。團報每人另加<b>運費</b>：當期學員 <b class="num" data-cfg="shipStudent">NT$50</b>、非當期學員 <b class="num" data-cfg="shipGuest">NT$80</b><span data-needs-chip>；21K、10K 另加大會規定的<b>晶片押金 <span class="num" data-cfg="chip">NT$100</span></b>，比賽當天歸還晶片即退還</span>。</p>
+        <p class="band__lead">報名費依大會公告。團報每人另加<b>運費</b>：當期學員和學員的小孩 <b class="num" data-cfg="shipStudent">NT$50</b>、非當期學員 <b class="num" data-cfg="shipGuest">NT$80</b><span data-needs-chip>；21K、10K 另加大會規定的<b>晶片押金 <span class="num" data-cfg="chip">NT$100</span></b>，比賽當天歸還晶片即退還</span>。</p>
       </div>
 
       <div class="dist-groups" id="distGroups"><!-- rendered from config.js --></div>
@@ -105,7 +105,7 @@
         <span class="formula__op" aria-hidden="true" data-needs-chip>+</span>
         <div class="formula__item" data-needs-chip><b class="num" data-cfg="chipShort">晶片押金 100</b><span>21K・10K（可退）</span></div>
         <span class="formula__op" aria-hidden="true">+</span>
-        <div class="formula__item"><b class="num" data-cfg="shipShort">運費 50 / 80</b><span>當期學員 / 非當期學員</span></div>
+        <div class="formula__item"><b class="num" data-cfg="shipShort">運費 50 / 80</b><span>當期學員（含小孩）/ 非當期學員</span></div>
         <span class="formula__op" aria-hidden="true">+</span>
         <div class="formula__item"><b>加購</b><span>選填</span></div>
         <span class="formula__op" aria-hidden="true">=</span>
@@ -304,8 +304,9 @@
             <legend><span class="step__head"><span class="step__no">1</span>報名身分</span></legend>
             <div class="field" data-field="member">
               <span class="label" id="lbl-member">你是 NID 當期學員嗎？<span class="req">*</span></span>
-              <div class="choices" role="radiogroup" aria-labelledby="lbl-member">
+              <div class="choices choices--3" role="radiogroup" aria-labelledby="lbl-member">
                 <label class="choice"><input type="radio" name="member" id="f-member-student" value="student"><span class="choice__body"><b>當期學員</b><small>運費 <span class="num" data-cfg="shipStudent">NT$50</span></small></span></label>
+                <label class="choice"><input type="radio" name="member" id="f-member-child" value="child"><span class="choice__body"><b>當期學員的小孩</b><small>運費 <span class="num" data-cfg="shipChild">NT$50</span>・未滿 18 歲，爸爸或媽媽是當期學員</small></span></label>
                 <label class="choice"><input type="radio" name="member" id="f-member-guest" value="guest"><span class="choice__body"><b>非當期學員</b><small>運費 <span class="num" data-cfg="shipGuest">NT$80</span>・需有當期學員朋友</small></span></label>
               </div>
             </div>
@@ -326,6 +327,20 @@
                   <label for="f-ref-class">朋友的班級<span class="req">*</span></label>
                   <select class="select" id="f-ref-class" name="refClass"></select>
                   <input class="input" type="text" id="f-ref-class-other" name="refClassOther" placeholder="請填寫朋友的班級" hidden>
+                </div>
+              </div>
+            </div>
+            <div data-when="member=child" hidden>
+              <div class="notice notice--before"><span class="notice__mark" aria-hidden="true">i</span><p>比賽當天<b>未滿 18 歲</b>、爸爸或媽媽是<b>當期學員</b>的小朋友，運費算當期學員的價格。請填爸爸或媽媽的姓名和班級，小編會核對；下面的資料請填小朋友本人的。</p></div>
+              <div class="grid-2">
+                <div class="field" data-field="parentName">
+                  <label for="f-parent-name">爸爸或媽媽的姓名<span class="req">*</span></label>
+                  <input class="input" type="text" id="f-parent-name" name="parentName" autocomplete="off" maxlength="30">
+                </div>
+                <div class="field" data-field="parentClass">
+                  <label for="f-parent-class">爸爸或媽媽的班級<span class="req">*</span></label>
+                  <select class="select" id="f-parent-class" name="parentClass"></select>
+                  <input class="input" type="text" id="f-parent-class-other" name="parentClassOther" placeholder="請填寫爸爸或媽媽的班級" hidden>
                 </div>
               </div>
             </div>
