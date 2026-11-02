@@ -961,56 +961,9 @@ details.fold > .fold__body { padding: 0 16px 16px; }
 .toast.is-on { opacity: 1; transform: translate(-50%, 0); }
 body.has-totalbar .toast { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
 
-/* ---------- 白色情人節特效：花瓣在內容之上、頂欄與視窗之下；愛心在最上層。兩張畫布都不擋點擊 */
-.fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-.fx-petals { z-index: 30; }
-.fx-hearts { z-index: 100; }
-/* 頂欄的小花按鈕：開關花瓣 */
-.fx-toggle {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  padding: 0;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, .3);
-  background: rgba(255, 255, 255, .08);
-  cursor: pointer;
-  transition: background-color .15s ease, border-color .15s ease;
-}
-.fx-toggle:hover { background: rgba(255, 255, 255, .18); border-color: rgba(255, 255, 255, .6); }
-.fx-toggle:focus-visible { outline-color: var(--sun); }
-.fx-toggle svg { width: 24px; height: 24px; overflow: visible; }
-.fx-flower { transform-box: fill-box; transform-origin: center; }
-.fx-flower path { fill: #ff9ebb; stroke: var(--ink); stroke-width: .8; stroke-linejoin: round; }
-.fx-flower circle { fill: var(--sun); stroke: var(--ink); stroke-width: .8; }
-.fx-slash { display: none; fill: none; stroke-linecap: round; }
-.fx-slash--under { stroke: var(--ink); stroke-width: 5; }
-.fx-slash--over { stroke: var(--on-ink); stroke-width: 2; }
-.fx-toggle[aria-pressed="false"] .fx-flower path { fill: rgba(255, 255, 255, .3); }
-.fx-toggle[aria-pressed="false"] .fx-flower circle { fill: rgba(255, 255, 255, .5); }
-.fx-toggle[aria-pressed="false"] .fx-slash { display: block; }
-@media (max-width: 860px) {
-  .topbar .fx-toggle { margin-left: auto; }
-  .topbar .fx-toggle:not([hidden]) ~ .btn { margin-left: 0; }
-}
+/* 白色情人節字樣 */
 .whiteday { font-style: normal; font-weight: 700; color: #c2185b; white-space: nowrap; }
-@media (prefers-reduced-motion: no-preference) {
-  .fx-toggle[aria-pressed="true"] .fx-flower { animation: fx-spin 14s linear infinite; }
-  @keyframes fx-spin { to { transform: rotate(360deg); } }
-}
-@media print { .fx-layer, .fx-toggle { display: none !important; } }
 
-/* entrance: content is visible at rest; only a gentle lift when motion is allowed */
-@media (prefers-reduced-motion: no-preference) {
-  .hero__copy > *, .hero__frame { animation: lift .7s cubic-bezier(.2, .7, .2, 1) both; }
-  .hero__copy > :nth-child(2) { animation-delay: .06s; }
-  .hero__copy > :nth-child(3) { animation-delay: .12s; }
-  .hero__copy > :nth-child(4) { animation-delay: .18s; }
-  .hero__frame { animation-delay: .1s; }
-  @keyframes lift { from { transform: translateY(14px); } to { transform: none; } }
-}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn, .toast { transition: none; }
