@@ -36,20 +36,6 @@
       <a href="#pay">匯款資訊</a>
       <a href="#faq">注意事項</a>
     </nav>
-    <button class="fx-toggle" id="petalToggle" type="button" aria-pressed="true" aria-label="關閉花瓣特效" title="關閉花瓣特效" hidden>
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <g class="fx-flower">
-          <path d="M12 12C9.4 9.8 8.8 5.4 10.8 2.8L12 4L13.2 2.8C15.2 5.4 14.6 9.8 12 12Z"/>
-          <path d="M12 12C9.4 9.8 8.8 5.4 10.8 2.8L12 4L13.2 2.8C15.2 5.4 14.6 9.8 12 12Z" transform="rotate(72 12 12)"/>
-          <path d="M12 12C9.4 9.8 8.8 5.4 10.8 2.8L12 4L13.2 2.8C15.2 5.4 14.6 9.8 12 12Z" transform="rotate(144 12 12)"/>
-          <path d="M12 12C9.4 9.8 8.8 5.4 10.8 2.8L12 4L13.2 2.8C15.2 5.4 14.6 9.8 12 12Z" transform="rotate(216 12 12)"/>
-          <path d="M12 12C9.4 9.8 8.8 5.4 10.8 2.8L12 4L13.2 2.8C15.2 5.4 14.6 9.8 12 12Z" transform="rotate(288 12 12)"/>
-          <circle cx="12" cy="12" r="2"/>
-        </g>
-        <path class="fx-slash fx-slash--under" d="M4.5 19.5L19.5 4.5"/>
-        <path class="fx-slash fx-slash--over" d="M4.5 19.5L19.5 4.5"/>
-      </svg>
-    </button>
     <button class="btn btn--sun btn--sm js-open-terms" type="button">我要報名</button>
   </div>
 </header>
@@ -689,14 +675,9 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="testbar" id="testBar" hidden>測試模式：開放前測試用，送出的資料會標示【測試】，正式開放前請在試算表刪除。</div>
 
-<!-- 白色情人節特效：飄落花瓣＋點擊愛心（不想要特效，刪掉最下面 fx.js 那一行即可） -->
-<canvas class="fx-layer fx-petals" id="petalCanvas" aria-hidden="true"></canvas>
-<canvas class="fx-layer fx-hearts" id="heartCanvas" aria-hidden="true"></canvas>
-
 <script src="assets/js/countries.js"></script>
 <script src="assets/js/config.js"></script>
 <script src="assets/js/app.js"></script>
-<script src="assets/js/fx.js"></script>
 <!-- ARTIFACT:BODY-END -->
 </body>
 </html>
